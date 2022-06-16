@@ -2,9 +2,8 @@ package sg.edu.iss.staffmanager.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Employee {
 	@Id
-	@GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid", strategy = "uuid")
-	private String id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private long id;
 	private String firstName;
 	private String lastName;
 	private String email;

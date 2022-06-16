@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import sg.edu.iss.staffmanager.model.Employee;
 
 @Repository
-public interface EmployeeRepo extends JpaRepository<Employee, String> {
+public interface EmployeeRepo extends JpaRepository<Employee, Long> {
 	
 	@Query("SELECT e FROM Employee e where e.id = :id")
 	Employee findEmployeeById(@Param("id") String id);

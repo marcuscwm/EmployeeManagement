@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import sg.edu.iss.staffmanager.model.Employee;
 import sg.edu.iss.staffmanager.service.EmployeeService;
@@ -42,9 +43,9 @@ public class EmployeeController {
 		return "update_employee";
 	}
 	
-	@GetMapping("/removeEmployee/{id}")
-	public String removeEmployee(@PathVariable("id") long id) {
-		employeeService.removeEmployee(employeeService.getEmployeeById(id));
+	@PostMapping("/removeEmployee")
+	public String removeEmployee(@RequestParam Long employeeID) {
+		employeeService.removeEmployee(employeeService.getEmployeeById(employeeID));
 		return "redirect:/";
 	}
 }

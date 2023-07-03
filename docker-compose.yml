@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+    mysqldb:
+      env_file: ./.env
+      image: container-registry.oracle.com/mysql/community-server:8.0.33
+      command: --default-authentication-plugin=caching_sha2_password
+      restart: on-failure
+      ports:
+        - ${MYSQL_LOCAL_PORT}:${MYSQL_DOCKER_PORT}
+      environment:
+        MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u ${MYSQL_USER}", "-p ${MYSQL_PASSWORD}"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+    
+    app:
+      depends_on:
+        mysqldb:
+          condition: service_healthy
+      env_file: ./.env
+      build: .
+      restart: on-failure
+      ports:
+        - ${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/${MYSQL_DATABASE}?useSSL=false&serverTimezone=Asia/Singapore&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
+        SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+        SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+
+# CLI command:
+# docker compose -f docker-compose.yml -p <project name> up
